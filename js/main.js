@@ -117,7 +117,6 @@ const app = {
     $(".playlist").innerHTML = htmls.join("");
     // Get song elements after render
     songElements = $$(".song-element");
-    console.log(songElements);
   },
   handleEvents: function () {
     const _this = this;
@@ -378,10 +377,9 @@ const app = {
     this.handleEvents();
     // Load current Song
     this.loadCurrentSong();
-    console.log(app.songs);
   },
 };
-crawlTop100()
+crawlTop100() 
   .then((data) => {
     app.songs = app.songs.concat(data);
   })
