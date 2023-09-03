@@ -15,9 +15,13 @@ const nextBtn = $(".btn-next");
 const prevBtn = $(".btn-prev");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
+const tabs = $$(".tab-item");
+const lineOfTabs = $(".line");
 let songElements;
 const timePastElement = $(".time-past");
 const timeRemainingElement = $(".time-remaining");
+
+
 
 const cdWitdh = cdThumb.offsetWidth;
 const cdHeight = cdThumb.offsetHeight;
@@ -114,7 +118,7 @@ const app = {
             </div>
         </div>`;
     });
-    $(".playlist").innerHTML = htmls.join("");
+    playList.innerHTML = htmls.join("");
     // Get song elements after render
     songElements = $$(".song-element");
   },
@@ -273,11 +277,21 @@ const app = {
         repeatBtn.classList.remove("active");
       }
     });
+    tabs.forEach((element,index)=>{
+      element.addEventListener('click',()=>{
+        // Remove active for old tab
+        $(".tab-item.active").classList.remove("active")
+        // Add active for new tab
+        tabs[index].classList.add('active')
+        //Update line
+        lineOfTabs.style.width = element.offsetWidth + 'px'
+        lineOfTabs.style.left = element.offsetLeft + 'px'
+      })
+    })
     // Check event when click song element
-    songElements.forEach((songElement, index) => {
+    songElements.forEach((songElement) => {
       songElement.addEventListener("click", (e) => {
         // If click different more button
-        console.log(songElement);
         if (!(e.target.classList[0] === "fa")) {
           _this.clearPrevSongElement();
           // last class of song element
@@ -380,8 +394,8 @@ const app = {
   },
 };
 crawlTop100() 
-  .then((data) => {
-    app.songs = app.songs.concat(data);
+  .then((top100Songs) => { 
+    app.songs = app.songs.concat(top100Songs);
   })
   .then(() => {
     app.start();
