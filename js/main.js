@@ -401,11 +401,14 @@ const app = {
   },
   prevSong: function () {
     this.currentIndex--;
-    if (this.currentIndex < 0) {
+    if(this.currentIndex >= this.currentSongs.length){
+      this.currentIndex = this.currentSongs.length -1
+    }
+    else if(this.currentIndex < 0) {
       this.currentIndex = this.currentSongs.length - 1;
     }
   },
-  randomIndex: function () {
+  randomIndex: function (){
     let newIndex;
     do {
       newIndex = Math.floor(Math.random() * this.currentSongs.length);
@@ -417,7 +420,9 @@ const app = {
     let currentSongElement = this.currentTabElement.querySelector(
       `.song-${this.currentIndex}`
     );
-    currentSongElement.classList.remove("activeSong");
+    if(currentSongElement){
+      currentSongElement.classList.remove("activeSong");
+    }
   },
   scrollToActiveSong: function () {
     // After 0.5s will croll tag active Song into middle screen
@@ -463,7 +468,7 @@ const app = {
       progressPastWidth
     )}px, rgba(0, 0, 0,0.2) 100%)`;
   },
-  clearActiveOtherTab:function(){
+  clearActiveOtherTab: function(){
     playLists.forEach((playList)=>{
       if(playList !== this.currentTabElement){
         // Remove active class when click song tag in other Tab
@@ -471,6 +476,8 @@ const app = {
           playList 
             .querySelector(".activeSong")
             .classList.remove("activeSong");
+          // Reset index song when click Button in other Tab to start index 0 other last index
+          this.currentIndex = -1
         } else { // Only clearPrevSong when click in same Tab
           this.clearPrevSongElement();
         }
