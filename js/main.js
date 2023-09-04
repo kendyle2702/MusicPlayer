@@ -39,7 +39,7 @@ const app = {
     {
       name: "id 072019",
       singer: "W/n ft 267",
-      path: "https://a128-zmp3.zmdcdn.me/90083d6a4f1c62d2b7b5f3e76fed2986?authen=exp=1693835964~acl=/90083d6a4f1c62d2b7b5f3e76fed2986/*~hmac=ad5281b6bca0035d1d94379f772977a4",
+      path: "https://a128-zmp3.zmdcdn.me/90083d6a4f1c62d2b7b5f3e76fed2986?authen=exp=1694008835~acl=/90083d6a4f1c62d2b7b5f3e76fed2986/*~hmac=9f92ae790616537d04eb5e9840089385&fs=MTY5MzgzNjAzNTA2NHx3ZWJWNHwxMjUdUngMjM1LjIzNy4xODU",
       image: "./img/3107id072019.jpg",
     },
     {
@@ -211,12 +211,12 @@ const app = {
         // If have enable repeat button
         // not doing and step to audio.play()
       } else if (_this.isRandom) {
-        _this.clearPrevSongElement();
+        _this.clearActiveOtherTab();
         // If have enable random button
         // Update current index
         _this.randomIndex();
       } else {
-        _this.clearPrevSongElement();
+        _this.clearActiveOtherTab();
         // not
         // Update current index
         _this.nextSong();
@@ -231,7 +231,7 @@ const app = {
     progress.addEventListener("change", (e) => {
       audio.currentTime = (e.target.value * audio.duration) / 10000;
       _this.updateProgressColor();
-      
+
       // Not seeking when change value progress
       _this.isSeeking = false;
     });
