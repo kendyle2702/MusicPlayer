@@ -34,6 +34,7 @@ const app = {
   isPlaying: false,
   isRandom: false,
   isRepeat: false,
+  isSeeking:false,
   myListSongs: [
     {
       name: "id 072019",
@@ -195,10 +196,13 @@ const app = {
     audio.addEventListener("timeupdate", () => {
       if (audio.duration) {
         _this.runTimeOfSong();
-        progress.value = Math.floor(
-          (audio.currentTime / audio.duration) * 10000
-        );
-        _this.updateProgressColor();
+        // Seeking not update progres color
+        if(!_this.isSeeking){
+          progress.value = Math.floor(
+            (audio.currentTime / audio.duration) * 10000
+          ); 
+          _this.updateProgressColor();
+        }
       }
     });
     // Check event when audio ended
@@ -227,11 +231,17 @@ const app = {
     progress.addEventListener("change", (e) => {
       audio.currentTime = (e.target.value * audio.duration) / 10000;
       _this.updateProgressColor();
+      
+      // Not seeking when change value progress
+      _this.isSeeking = false;
     });
     // Check event when move the progress button
     progress.addEventListener("input", () => {
       // Update color of progress bar
       _this.updateProgressColor();
+
+      // Seeking
+      _this.isSeeking = true;
     });
     //Check event when click next button
     nextBtn.addEventListener("click", () => {
