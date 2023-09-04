@@ -235,7 +235,9 @@ const app = {
     });
     //Check event when click next button
     nextBtn.addEventListener("click", () => {
-      _this.clearPrevSongElement();
+      // Clear active tag in other Tab or in currentTab
+      _this.clearActiveOtherTab();
+
       // If have enable random button
       if (_this.isRandom) {
         // Update current index
@@ -256,7 +258,9 @@ const app = {
     });
     //Check event when click previous button
     prevBtn.addEventListener("click", () => {
-      _this.clearPrevSongElement();
+      // Clear active tag in other Tab or in currentTab
+      _this.clearActiveOtherTab();
+
       // If have enable random button
       if (_this.isRandom) {
         // Update current index
@@ -329,14 +333,9 @@ const app = {
       songElement.addEventListener("click", (e) => {
         // If click different more button
         if (!(e.target.classList[0] === "fa")) {
-          // Remove active class when click song tag in other Tab
-          if (playListTop100.querySelector(".activeSong")) {
-            playListTop100
-              .querySelector(".activeSong")
-              .classList.remove("activeSong");
-          } else { // Only clearPrevSong when click in same Tab
-            _this.clearPrevSongElement();
-          }
+          // Clear active tag in other Tab or in currentTab
+          _this.clearActiveOtherTab();
+
           // last class of song element
           const lastClass = songElement.classList[1];
           // Set currentIndex = id of song
@@ -359,14 +358,8 @@ const app = {
       songElement.addEventListener("click", (e) => {
         // If click different more button
         if (!(e.target.classList[0] === "fa")) {
-          // Remove active class when click song tag in other Tab
-          if (playListMyList.querySelector(".activeSong")) {
-            playListMyList
-              .querySelector(".activeSong")
-              .classList.remove("activeSong");
-          } else { // Only clearPrevSong when click in same Tab
-            _this.clearPrevSongElement();
-          }
+          // Clear active tag in other Tab or in currentTab
+          _this.clearActiveOtherTab();
 
           // get last class of song element
           const lastClass = songElement.classList[1];
@@ -469,6 +462,20 @@ const app = {
     )}px, rgb(0, 0, 0,0.2) ${Math.floor(
       progressPastWidth
     )}px, rgba(0, 0, 0,0.2) 100%)`;
+  },
+  clearActiveOtherTab:function(){
+    playLists.forEach((playList)=>{
+      if(playList !== this.currentTabElement){
+        // Remove active class when click song tag in other Tab
+        if (playList.querySelector(".activeSong")) {
+          playList 
+            .querySelector(".activeSong")
+            .classList.remove("activeSong");
+        } else { // Only clearPrevSong when click in same Tab
+          this.clearPrevSongElement();
+        }
+      }
+    })
   },
   start: function () {
     // Add common listener events (DOM event)

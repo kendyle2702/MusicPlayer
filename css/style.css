@@ -233,7 +233,7 @@ header h2 {
   font-size: 20px;
   color: gray;
 }
-/* Rank  */
+/* Rank of other Top 100 Tab  */
 .rank {
   color: gray;
   font-size: 20px;
@@ -274,7 +274,8 @@ header h2 {
   .playlist {
     margin-top: 450px;
   }
-  /* Rank  */
+
+  /* Rank of other Top 100 Tab  */
   .song-top100 {
     padding-left: 15px;
   }
@@ -289,6 +290,7 @@ header h2 {
   .song-content {
     width: 150px;
   }
+  /* Rank of other Top 100 Tab  */
   .song-top100 {
     padding-left: 10px;
   }
