@@ -3,7 +3,7 @@ import crawlTop100 from "../data/crawldata.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const playList = $$(".playlist");
+const playLists = $$(".playlist");
 const playListMyList = $(".playlist-mylist");
 const playListTop100 = $(".playlist-top100");
 const cdThumb = $(".cd-thumb");
@@ -22,6 +22,7 @@ const lineOfTabs = $(".line");
 let songMyListElements, songTop100Elements;
 const timePastElement = $(".time-past");
 const timeRemainingElement = $(".time-remaining");
+const dashboard = $(".dashboard")
 
 const cdWitdh = cdThumb.offsetWidth;
 const cdHeight = cdThumb.offsetHeight;
@@ -120,7 +121,8 @@ const app = {
   },
   renderTop100Tab: function () {
     const htmls = this.top100Songs.map((element, index) => {
-      return `<div class="song-element song-${index}">
+      return `<div class="song-element song-${index} song-top100">
+            <div class="rank top-${++index}">${index}</div>
             <div class="song-img">
               <img src="${element.image}" alt="${element.name}"/>
             </div>
@@ -303,14 +305,17 @@ const app = {
         lineOfTabs.style.width = element.offsetWidth + "px";
         lineOfTabs.style.left = element.offsetLeft + "px";
 
+        // Change Tab
         if (index === 0) {
-          playList[0].style.display = "block";
-          playList[1].style.display = "none";
+          playLists[0].style.display = "block";
+          playLists[1].style.display = "none";
+          // Update current
           _this.currentSongs = _this.myListSongs;
           _this.currentTabElement = playListMyList;
         } else if (index === 1) {
-          playList[1].style.display = "block";
-          playList[0].style.display = "none";
+          playLists[1].style.display = "block";
+          playLists[0].style.display = "none";
+          // Update current
           _this.currentSongs = _this.top100Songs;
           _this.currentTabElement = playListTop100;
         }
@@ -324,11 +329,12 @@ const app = {
       songElement.addEventListener("click", (e) => {
         // If click different more button
         if (!(e.target.classList[0] === "fa")) {
+          // Remove active class when click song tag in other Tab
           if (playListTop100.querySelector(".activeSong")) {
             playListTop100
               .querySelector(".activeSong")
               .classList.remove("activeSong");
-          } else {
+          } else { // Only clearPrevSong when click in same Tab
             _this.clearPrevSongElement();
           }
           // last class of song element
@@ -336,7 +342,8 @@ const app = {
           // Set currentIndex = id of song
           const regexCheckIndex = /[0-9]+/g;
           _this.currentIndex = Number(lastClass.match(regexCheckIndex));
-          // Delay 200ms
+          
+          // Delay 200ms and loadCurrentsong, audio
           setTimeout(() => {
             _this.loadCurrentSong();
             audio.play();
@@ -347,24 +354,27 @@ const app = {
   },
   handleTop100ListTabEvent() {
     let _this = this;
-    // Check event when click song element of My List Tab
+    // Check event when click song element of Top 100 Tab
     songTop100Elements.forEach((songElement) => {
       songElement.addEventListener("click", (e) => {
         // If click different more button
         if (!(e.target.classList[0] === "fa")) {
+          // Remove active class when click song tag in other Tab
           if (playListMyList.querySelector(".activeSong")) {
             playListMyList
               .querySelector(".activeSong")
               .classList.remove("activeSong");
-          } else {
+          } else { // Only clearPrevSong when click in same Tab
             _this.clearPrevSongElement();
           }
-          // last class of song element
+
+          // get last class of song element
           const lastClass = songElement.classList[1];
           // Set currentIndex = id of song
           const regexCheckIndex = /[0-9]+/g;
           _this.currentIndex = Number(lastClass.match(regexCheckIndex));
-          // Delay 200ms
+          
+          // Delay 200ms and loadCurrentsong, audio
           setTimeout(() => {
             _this.loadCurrentSong();
             audio.play();
@@ -374,14 +384,20 @@ const app = {
     });
   },
   loadCurrentSong: function () {
+
+    // Render dashboard content
     nameTitle.innerText = this.getCurrentSong().name;
     cdThumb.src = this.getCurrentSong().image;
     audio.src = this.getCurrentSong().path;
+
+
     // Active color current song elemnt
     let currentSongElement = this.currentTabElement.querySelector(
       `.song-${this.currentIndex}`
     );
     currentSongElement.classList.add("activeSong");
+      
+    // Scroll active song to middle screen
     this.scrollToActiveSong();
   },
   nextSong: function () {
@@ -404,12 +420,14 @@ const app = {
     this.currentIndex = newIndex;
   },
   clearPrevSongElement: function () {
+    // Get current Song Element and remove activeSong class in current Tab
     let currentSongElement = this.currentTabElement.querySelector(
       `.song-${this.currentIndex}`
     );
     currentSongElement.classList.remove("activeSong");
   },
   scrollToActiveSong: function () {
+    // After 0.5s will croll tag active Song into middle screen
     setTimeout(() => {
       $(".activeSong").scrollIntoView({
         behavior: "smooth",
@@ -423,15 +441,18 @@ const app = {
     let timeRemainingSeconds = Math.floor(audio.duration);
     let timeRemainingMinutes = Math.floor(timeRemainingSeconds / 60);
     let timeRemainingExtraSeconds = Math.floor(timeRemainingSeconds % 60);
+    // Render time
     timeRemainingElement.innerText = `0${timeRemainingMinutes}:${
       timeRemainingExtraSeconds < 10
         ? "0" + timeRemainingExtraSeconds
         : timeRemainingExtraSeconds
     }`;
+
     // Calculatetime-past
     let timePastSeconds = Math.floor(audio.currentTime);
     let timePastMinutes = Math.floor(timePastSeconds / 60);
     let timePastExtraSeconds = Math.floor(timePastSeconds % 60);
+    // Render time
     timePastElement.innerText = `0${timePastMinutes}:${
       timePastExtraSeconds < 10
         ? "0" + timePastExtraSeconds
@@ -441,7 +462,8 @@ const app = {
   updateProgressColor: function () {
     // Calculate progress past width
     let progressPastWidth = (progress.value / 10000) * progress.clientWidth;
-    // Update
+
+    // Update color linear gradient
     progress.style.background = `linear-gradient(to right, #2a55e0 0%, #9c6ff0 ${Math.floor(
       progressPastWidth
     )}px, rgb(0, 0, 0,0.2) ${Math.floor(
@@ -451,17 +473,24 @@ const app = {
   start: function () {
     // Add common listener events (DOM event)
     this.handleCommonEvents();
+
     // Load My List Tab
     this.loadMyListTab();
+
     // Load Top 100 Tab
     this.loadTop100Tab();
+
     // Load current Song
     this.loadCurrentSong();
   },
   loadMyListTab: function () {
+    // Set current songs = My List Songs in My List Tab
     this.currentSongs = this.myListSongs;
+
+    // Render songs in My List
     this.renderMyListTab();
-    // Start with My List Tab
+
+    // Handle event in My List Tab
     this.handleMyListTabEvent();
   },
   loadTop100Tab: function () {
@@ -474,9 +503,11 @@ const app = {
       .then(() => {
         // Render Top 100 List Song
         this.renderTop100Tab();
+
         // Handle event of My List tab
         this.handleTop100ListTabEvent();
-        // Hidden Top 100 Tab
+
+        // Hidden Top 100 Tab when start
         playListTop100.style.display = "none";
       })
       .catch((err) => {

@@ -203,6 +203,7 @@ header h2 {
   box-shadow: 0 0px 2px 0px rgb(11, 11, 14);
   cursor: pointer;
 }
+
 /* song image */
 .song-img {
   height: 70px;
@@ -232,6 +233,25 @@ header h2 {
   font-size: 20px;
   color: gray;
 }
+/* Rank  */
+.rank {
+  color: gray;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.song-top100 {
+  padding-left: 50px;
+}
+.rank.top-1{
+  color: #336eec;
+}
+.rank.top-2{
+  color: greenyellow;
+}
+.rank.top-3{
+  color: orange;
+}
 /* Song Element when playing */
 .activeSong {
   background-color: var(--primary-color);
@@ -251,7 +271,31 @@ header h2 {
     left: 0;
     top: 0;
   }
-  .playlist{
-    margin-top: 440px;
+  .playlist {
+    margin-top: 450px;
+  }
+  /* Rank  */
+  .song-top100 {
+    padding-left: 15px;
+  }
+  .song-top100 .song-content {
+    width: 150px;
+  }
+  .rank {
+    width: 40px;
+  }
+}
+@media screen and (max-width: 400px){
+  .song-content {
+    width: 150px;
+  }
+  .song-top100 {
+    padding-left: 10px;
+  }
+  .song-top100 .song-content {
+    width: 120px;
+  }
+  .rank {
+    width: 30px;
   }
 }
