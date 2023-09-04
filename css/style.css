@@ -172,7 +172,7 @@ header h2 {
   background-color: rgba(194, 53, 100, 0.1);
   border-color: rgba(194, 53, 100, 0.1);
 }
-.tab-item.active{
+.tab-item.active {
   opacity: 1;
 }
 .line {
@@ -187,7 +187,7 @@ header h2 {
 }
 /* Playlist  */
 .playlist {
-  margin-top: 440px;
+  margin-top: 465px;
   padding: 20px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.1);
@@ -250,5 +250,8 @@ header h2 {
     right: 0;
     left: 0;
     top: 0;
+  }
+  .playlist{
+    margin-top: 440px;
   }
 }

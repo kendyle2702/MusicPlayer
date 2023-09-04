@@ -3,7 +3,6 @@ import crawlTop100 from "../data/crawldata.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const playList = $$(".playlist");
 const playListMyList = $(".playlist-mylist");
 const playListTop100 = $(".playlist-top100");
 const cdThumb = $(".cd-thumb");
@@ -17,7 +16,7 @@ const nextBtn = $(".btn-next");
 const prevBtn = $(".btn-prev");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
-const tabsElement = $$(".tab-item");
+const tabs = $$(".tab-item");
 const lineOfTabs = $(".line");
 let songMyListElements, songTop100Elements;
 const timePastElement = $(".time-past");
@@ -28,15 +27,10 @@ const cdHeight = cdThumb.offsetHeight;
 
 const app = {
   currentIndex: 0,
-  currentTab: "My List",
   isPlaying: false,
   isRandom: false,
   isRepeat: false,
-  tabs: {
-    myList: "My List",
-    top100: "Top 100",
-  },
-  myListSongs: [
+  songs: [
     {
       name: "id 072019",
       singer: "W/n ft 267",
@@ -98,16 +92,18 @@ const app = {
       image: "./img/KhongYeuXinDungNoi.jpg",
     },
   ],
-  top100Songs: [],
-  getCurrentSong: function (currentTab) {
-    if (currentTab === this.tabs.myList) {
-      return this.myListSongs[this.currentIndex];
-    } else if (currentTab === this.tabs.top100) {
-      return this.top100Songs[this.currentIndex];
-    }
+  definedProperties: function () {
+    Object.defineProperty(this, "currentSong", {
+      get: function () {
+        return this.songs[this.currentIndex];
+      },
+      set: function (newValue) {
+        return newValue;
+      },
+    });
   },
-  renderMyListTab: function () {
-    const htmls = this.myListSongs.map((element, index) => {
+  renderMyList: function () {
+    const htmls = this.songs.map((element, index) => {
       return `<div class="song-element song-${index}">
             <div class="song-img">
               <img src="${element.image}" alt="${element.name}"/>
@@ -122,29 +118,10 @@ const app = {
         </div>`;
     });
     playListMyList.innerHTML = htmls.join("");
-    // Get song elements after render in MyList tab
+    // Get song elements after render
     songMyListElements = playListMyList.querySelectorAll(".song-element");
   },
-  renderTop100Tab: function () {
-    const htmls = this.top100Songs.map((element, index) => {
-      return `<div class="song-element song-${index}">
-            <div class="song-img">
-              <img src="${element.image}" alt="${element.name}"/>
-            </div>
-            <div class="song-content">
-              <h3 class="song-name">${element.name}</h3>
-              <p class="song-author">${element.singer}</p>
-            </div>
-            <div class="song-more">
-              <i class="fa fa-ellipsis-h"></i>
-            </div> 
-        </div>`;
-    });
-    playListTop100.innerHTML = htmls.join("");
-    // Get song elements after render in Top 100 tab
-    songTop100Elements = playListTop100.querySelectorAll(".song-element");
-  },
-  handleCommonEvents: function () {
+  handleEvents: function () {
     const _this = this;
     // Excecute rotate cd
     const cdThumbAnimate = cdThumb.animate(
@@ -212,12 +189,12 @@ const app = {
         // If have enable repeat button
         // not doing and step to audio.play()
       } else if (_this.isRandom) {
-        _this.clearPrevSongElement(_this.currentTab);
+        _this.clearPrevSongElement();
         // If have enable random button
         // Update current index
         _this.randomIndex(_this.currentIndex);
       } else {
-        _this.clearPrevSongElement(_this.currentTab);
+        _this.clearPrevSongElement();
         // not
         // Update current index
         _this.nextSong();
@@ -240,15 +217,15 @@ const app = {
     });
     //Check event when click next button
     nextBtn.addEventListener("click", () => {
-      _this.clearPrevSongElement(_this.currentTab);
+      _this.clearPrevSongElement();
       // If have enable random button
       if (_this.isRandom) {
         // Update current index
-        _this.randomIndex(_this.currentIndex, this.currentTab);
+        _this.randomIndex(_this.currentIndex);
       } else {
         // Not
         // Update current index
-        _this.nextSong(this.currentTab);
+        _this.nextSong();
       }
       // Change status of button
       nextBtn.classList.add("active");
@@ -261,14 +238,14 @@ const app = {
     });
     //Check event when click previous button
     prevBtn.addEventListener("click", () => {
-      _this.clearPrevSongElement(_this.currentTab);
+      _this.clearPrevSongElement();
       // If have enable random button
       if (_this.isRandom) {
         // Update current index
-        _this.randomIndex(_this.currentIndex, this.currentTab);
+        _this.randomIndex();
       } else {
         // Update current index
-        _this.prevSong(this.currentTab);
+        _this.prevSong();
       }
       // Change status of button
       prevBtn.classList.add("active");
@@ -299,40 +276,24 @@ const app = {
         repeatBtn.classList.remove("active");
       }
     });
-    //Check event when click title tab
-    tabsElement.forEach((element, index) => {
+    //Check event when click tab
+    tabs.forEach((element, index) => {
       element.addEventListener("click", () => {
-        // Remove active color for old tab
+        // Remove active for old tab
         $(".tab-item.active").classList.remove("active");
         // Add active for new tab
-        tabsElement[index].classList.add("active");
-
-        if (index === 0) {
-          playList[0].style.display = "block";
-          playList[1].style.display = "none";
-          _this.currentTab = _this.tabs.myList;
-          _this.handleMyListTabEvent();
-        } else if (index === 1) {
-          playList[1].style.display = "block";
-          playList[0].style.display = "none";
-          _this.currentTab = _this.tabs.top100;
-          _this.handleTop100ListTabEvent();
-        }
-
-        //Update line under title tab
+        tabs[index].classList.add("active");
+        //Update line
         lineOfTabs.style.width = element.offsetWidth + "px";
         lineOfTabs.style.left = element.offsetLeft + "px";
       });
     });
-  },
-  handleMyListTabEvent() {
-    let _this = this;
-    // Check event when click song element of My List Tab
+    // Check event when click song element
     songMyListElements.forEach((songElement) => {
-      songElement.onclick = (e) => {
+      songElement.addEventListener("click", (e) => {
         // If click different more button
         if (!(e.target.classList[0] === "fa")) {
-          _this.clearPrevSongElement(_this.currentTab);
+          _this.clearPrevSongElement();
           // last class of song element
           const lastClass = songElement.classList[1];
           // Set currentIndex = id of song
@@ -344,96 +305,42 @@ const app = {
             audio.play();
           }, 200);
         }
-      };
-    });
-  },
-  handleTop100ListTabEvent() {
-    let _this = this;
-    // Check event when click song element of My List Tab
-    songTop100Elements.forEach((songElement) => {
-      songElement.onclick = (e) => {
-        console.log(_this.currentTab);
-        // If click different more button
-        if (!(e.target.classList[0] === "fa")) {
-          _this.clearPrevSongElement(_this.currentTab);
-          // last class of song element
-          const lastClass = songElement.classList[1];
-          // Set currentIndex = id of song
-          const regexCheckIndex = /[0-9]+/g;
-          _this.currentIndex = Number(lastClass.match(regexCheckIndex));
-          console.log(_this.currentIndex);
-          // Delay 200ms
-          setTimeout(() => {
-            _this.loadCurrentSong();
-            audio.play();
-          }, 200);
-        }
-      };
+      });
     });
   },
   loadCurrentSong: function () {
-    nameTitle.innerText = this.getCurrentSong(this.currentTab).name;
-    cdThumb.src = this.getCurrentSong(this.currentTab).image;
-    audio.src = this.getCurrentSong(this.currentTab).path;
+    nameTitle.innerText = this.currentSong.name;
+    cdThumb.src = this.currentSong.image;
+    audio.src = this.currentSong.path;
     // Active current song elemnt
-    let currentTabElement;
-    if (this.currentTab === this.tabs.myList) {
-      currentTabElement = playListMyList;
-    } else if (this.currentTab === this.tabs.top100) {
-      currentTabElement = playListTop100;
-    }
-    let currentSongElement = currentTabElement.querySelector(
-      `.song-${this.currentIndex}`
-    );
+    let currentSongElement = $(`.song-${this.currentIndex}`);
     currentSongElement.classList.add("activeSong");
     this.scrollToActiveSong();
   },
-  nextSong: function (currentTab) {
-    let songs;
-    if (currentTab === this.tabs.myList) {
-      songs = this.myListSongs;
-    } else if (currentTab === this.tabs.top100) {
-      songs = this.top100Songs;
-    }
+  nextSong: function () {
     this.currentIndex++;
-    if (this.currentIndex >= songs.length) {
+    if (this.currentIndex >= this.songs.length) {
       this.currentIndex = 0;
     }
+    this.currentSong = this.songs[this.currentIndex];
   },
-  prevSong: function (currentTab) {
-    let songs;
-    if (currentTab === this.tabs.myList) {
-      songs = this.myListSongs;
-    } else if (currentTab === this.tabs.top100) {
-      songs = this.top100Songs;
-    }
+  prevSong: function () {
     this.currentIndex--;
     if (this.currentIndex < 0) {
-      this.currentIndex = songs.length - 1;
+      this.currentIndex = this.songs.length - 1;
     }
+    this.currentSong = this.songs[this.currentIndex];
   },
-  randomIndex: function (currentIndex, currentTab) {
-    let newIndex, songs;
-    if (currentTab === this.tabs.myList) {
-      songs = this.myListSongs;
-    } else if (currentTab === this.tabs.top100) {
-      songs = this.top100Songs;
-    }
+  randomIndex: function (currentIndex) {
+    let newIndex;
     do {
-      newIndex = Math.floor(Math.random() * songs.length);
+      newIndex = Math.floor(Math.random() * this.songs.length);
     } while (newIndex === currentIndex);
     this.currentIndex = newIndex;
+    this.currentSong = this.songs[this.currentIndex];
   },
-  clearPrevSongElement: function (currentTab) {
-    let currentPlaylist;
-    if (currentTab === this.tabs.myList) {
-      currentPlaylist = playListMyList;
-    } else if (currentTab === this.tabs.top100) {
-      currentPlaylist = playListTop100;
-    }
-    let currentSongElement = currentPlaylist.querySelector(
-      `.song-${this.currentIndex}`
-    );
+  clearPrevSongElement: function () {
+    let currentSongElement = $(`.song-${this.currentIndex}`);
     currentSongElement.classList.remove("activeSong");
   },
   scrollToActiveSong: function () {
@@ -476,36 +383,39 @@ const app = {
     )}px, rgba(0, 0, 0,0.2) 100%)`;
   },
   start: function () {
-    // Add common listener events (DOM event)
-    this.handleCommonEvents();
-    // Load My List Tab
-    this.loadMyListTab();
-    // Load Top 100 Tab
-    this.loadTop100Tab();
+    // Defined properties for object
+    this.definedProperties();
+    // Render Playlist
+    this.renderMyList();
+    // Add listener events (DOM event)
+    this.handleEvents();
     // Load current Song
     this.loadCurrentSong();
   },
-  loadMyListTab: function () {
-    this.renderMyListTab();
-    // Start with My List Tab
-    this.handleMyListTabEvent();
-  },
-  loadTop100Tab: function () {
-    crawlTop100() 
-      .then((top100Songs) => {
-        app.top100Songs = top100Songs;
-        // app.myListSongs = app.myListSongs.concat(top100Songs);
-      })
-      .then(() => {
-        // Render Top 100 List Song
-        this.renderTop100Tab();  
-        // Handle event of My List tab
-        this.handleTop100ListTabEvent();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },
 };
+crawlTop100()
+  .then((top100Songs) => {
+    app.songs = app.songs.concat(top100Songs);
+  })
+  .then(() => {
+    app.start();
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-app.start();
+
+  definedProperties: function (currentTab) {
+    Object.defineProperty(this, "currentSong", { 
+      get: function () {
+        if (currentTab === this.tabs.myList) {
+          return this.myListSongs[this.currentIndex];
+        } else if (currentTab === this.tabs.top100) {
+          return this.top100Songs[this.currentIndex];
+        }
+      },
+      set: function (newValue) {
+        return newValue;
+      },
+    });
+  },
