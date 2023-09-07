@@ -114,8 +114,14 @@ header h2 {
 
 /* Progress */
 .time-container {
+  position: relative;
   display: flex;
   justify-content: space-between;
+}
+.time-seeking{
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 /* Css for progress bar */
 #progress {

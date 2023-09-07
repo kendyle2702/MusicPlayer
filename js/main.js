@@ -1,4 +1,4 @@
-import crawlTop100 from "../data/crawldata.js";
+import crawlTop100 from "../data/crawlTop100/crawlTop100.js";
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -22,7 +22,7 @@ const lineOfTabs = $(".line");
 let songMyListElements, songTop100Elements;
 const timePastElement = $(".time-past");
 const timeRemainingElement = $(".time-remaining");
-const dashboard = $(".dashboard")
+const timeSeekingElement = $(".time-seeking")
 
 const cdWitdh = cdThumb.offsetWidth;
 const cdHeight = cdThumb.offsetHeight;
@@ -46,7 +46,7 @@ const app = {
       name: "Bức Tranh Từ Nước Mắt",
       singer: "Mr Siro",
       path: "https://a128-zmp3.zmdcdn.me/f3e6f9e86f695e3abf60c1347f7d32c8?authen=exp=1693840526~acl=/f3e6f9e86f695e3abf60c1347f7d32c8/*~hmac=23411ed541290f7d79991eacf7210b67",
-      image: "./img/BucTranhTuNuocMat.jpg",
+      image: "./img/BucTranhTuNuocMat.jpg"
     },
     {
       name: "SAIGON SIMPLE LOVE",
