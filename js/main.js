@@ -1,6 +1,6 @@
 import crawlTop100 from "../data/crawlTop100/crawlTop100.js";
 
-fetch('http://localhost:5000/api/v1/song?id=ZW7F90DU').then((data)=>{
+fetch('https://music-player-server-lime.vercel.app/api/v1/song?id=ZW7F90DU').then((data)=>{
   console.log(data)
 })
 
