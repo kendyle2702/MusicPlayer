@@ -1,8 +1,7 @@
 import crawlTop100 from "../data/crawlTop100/crawlTop100.js";
+import crawMyList from "../data/crawlMyList/crawMyList.js";
 
-fetch('https://music-player-server-lime.vercel.app/api/v1/song?id=ZW7F90DU').then((data)=>{
-  console.log(data)
-})
+crawMyList().then((data) => {});
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -26,7 +25,7 @@ const lineOfTabs = $(".line");
 let songMyListElements, songTop100Elements;
 const timePastElement = $(".time-past");
 const timeRemainingElement = $(".time-remaining");
-const timeSeekingElement = $(".time-seeking")
+const timeSeekingElement = $(".time-seeking");
 
 const cdWitdh = cdThumb.offsetWidth;
 const cdHeight = cdThumb.offsetHeight;
@@ -38,7 +37,7 @@ const app = {
   isPlaying: false,
   isRandom: false,
   isRepeat: false,
-  isSeeking:false,
+  isSeeking: false,
   myListSongs: [
     {
       name: "id 072019",
@@ -50,7 +49,7 @@ const app = {
       name: "Bức Tranh Từ Nước Mắt",
       singer: "Mr Siro",
       path: "https://a128-zmp3.zmdcdn.me/f3e6f9e86f695e3abf60c1347f7d32c8?authen=exp=1693840526~acl=/f3e6f9e86f695e3abf60c1347f7d32c8/*~hmac=23411ed541290f7d79991eacf7210b67",
-      image: "./img/BucTranhTuNuocMat.jpg"
+      image: "./img/BucTranhTuNuocMat.jpg",
     },
     {
       name: "SAIGON SIMPLE LOVE",
@@ -201,10 +200,10 @@ const app = {
       if (audio.duration) {
         _this.runTimeOfSong();
         // Seeking not update progres color
-        if(!_this.isSeeking){
+        if (!_this.isSeeking) {
           progress.value = Math.floor(
             (audio.currentTime / audio.duration) * 10000
-          ); 
+          );
           _this.updateProgressColor();
         }
       }
@@ -355,7 +354,7 @@ const app = {
           // Set currentIndex = id of song
           const regexCheckIndex = /[0-9]+/g;
           _this.currentIndex = Number(lastClass.match(regexCheckIndex));
-          
+
           // Delay 200ms and loadCurrentsong, audio
           setTimeout(() => {
             _this.loadCurrentSong();
@@ -380,7 +379,7 @@ const app = {
           // Set currentIndex = id of song
           const regexCheckIndex = /[0-9]+/g;
           _this.currentIndex = Number(lastClass.match(regexCheckIndex));
-          
+
           // Delay 200ms and loadCurrentsong, audio
           setTimeout(() => {
             _this.loadCurrentSong();
@@ -391,19 +390,17 @@ const app = {
     });
   },
   loadCurrentSong: function () {
-
     // Render dashboard content
     nameTitle.innerText = this.getCurrentSong().name;
     cdThumb.src = this.getCurrentSong().image;
     audio.src = this.getCurrentSong().path;
-
 
     // Active color current song elemnt
     let currentSongElement = this.currentTabElement.querySelector(
       `.song-${this.currentIndex}`
     );
     currentSongElement.classList.add("activeSong");
-      
+
     // Scroll active song to middle screen
     this.scrollToActiveSong();
   },
@@ -415,14 +412,13 @@ const app = {
   },
   prevSong: function () {
     this.currentIndex--;
-    if(this.currentIndex >= this.currentSongs.length){
-      this.currentIndex = this.currentSongs.length -1
-    }
-    else if(this.currentIndex < 0) {
+    if (this.currentIndex >= this.currentSongs.length) {
+      this.currentIndex = this.currentSongs.length - 1;
+    } else if (this.currentIndex < 0) {
       this.currentIndex = this.currentSongs.length - 1;
     }
   },
-  randomIndex: function (){
+  randomIndex: function () {
     let newIndex;
     do {
       newIndex = Math.floor(Math.random() * this.currentSongs.length);
@@ -434,7 +430,7 @@ const app = {
     let currentSongElement = this.currentTabElement.querySelector(
       `.song-${this.currentIndex}`
     );
-    if(currentSongElement){
+    if (currentSongElement) {
       currentSongElement.classList.remove("activeSong");
     }
   },
@@ -482,21 +478,20 @@ const app = {
       progressPastWidth
     )}px, rgba(0, 0, 0,0.2) 100%)`;
   },
-  clearActiveOtherTab: function(){
-    playLists.forEach((playList)=>{
-      if(playList !== this.currentTabElement){
+  clearActiveOtherTab: function () {
+    playLists.forEach((playList) => {
+      if (playList !== this.currentTabElement) {
         // Remove active class when click song tag in other Tab
         if (playList.querySelector(".activeSong")) {
-          playList 
-            .querySelector(".activeSong")
-            .classList.remove("activeSong");
+          playList.querySelector(".activeSong").classList.remove("activeSong");
           // Reset index song when click Button in other Tab to start index 0 other last index
-          this.currentIndex = -1
-        } else { // Only clearPrevSong when click in same Tab
+          this.currentIndex = -1;
+        } else {
+          // Only clearPrevSong when click in same Tab
           this.clearPrevSongElement();
         }
       }
-    })
+    });
   },
   start: function () {
     // Add common listener events (DOM event)
@@ -508,18 +503,26 @@ const app = {
     // Load Top 100 Tab
     this.loadTop100Tab();
 
-    // Load current Song
-    this.loadCurrentSong();
+    
   },
   loadMyListTab: function () {
-    // Set current songs = My List Songs in My List Tab
-    this.currentSongs = this.myListSongs;
+    
+    crawMyList().then((list) => {
+      this.myListSongs = list[0].map((e,i)=>{
+          return {...e,...list[1][i]}
+      })
 
-    // Render songs in My List
-    this.renderMyListTab();
+      // Set current songs = My List Songs in My List Tab
+      this.currentSongs = this.myListSongs;
 
-    // Handle event in My List Tab
-    this.handleMyListTabEvent();
+      // Render songs in My List
+      this.renderMyListTab();
+
+      // Handle event in My List Tab
+      this.handleMyListTabEvent();
+      // Load current Song
+      this.loadCurrentSong();
+    });
   },
   loadTop100Tab: function () {
     // Get data from module
