@@ -1,8 +1,6 @@
 import crawlTop100 from "../data/crawlTop100/crawlTop100.js";
 import crawMyList from "../data/crawlMyList/crawMyList.js";
 
-crawMyList().then((data) => {});
-
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
@@ -502,11 +500,10 @@ const app = {
 
     // Load Top 100 Tab
     this.loadTop100Tab();
-
     
   },
   loadMyListTab: function () {
-    
+    // Get myListSongs from module
     crawMyList().then((list) => {
       this.myListSongs = list[0].map((e,i)=>{
           return {...e,...list[1][i]}

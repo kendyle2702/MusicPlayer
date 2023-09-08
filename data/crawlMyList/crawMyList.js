@@ -113,8 +113,6 @@ const crawMyList = () =>{
             return response.json();
           }) 
           .then((data) => {
-            // console.log(e.name);
-            // console.log(data.data['128']);
             return {
               path: data.data['128']
             }
@@ -131,8 +129,6 @@ const crawMyList = () =>{
             return response.json();
           }) 
           .then((data) => {
-            // console.log(e.name);
-            // console.log(data);
             return {
               name: data.data.title,
               singer: data.data.artistsNames,
