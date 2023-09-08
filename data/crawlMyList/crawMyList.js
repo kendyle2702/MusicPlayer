@@ -1,5 +1,4 @@
-
-const myApi = "https://music-player-server-lime.vercel.app";
+const myApi = "https://music-player-server-kendyle2702.vercel.app/";
 const idMusics = [
   {
     id: "ZWBIEWBI",
@@ -93,7 +92,7 @@ const idMusics = [
     id: "Z6UFF9Z6",
     name: "để tôi ôm em bằng giai điệu này",
   },
-  
+
   {
     id: "ZW8WOA0A",
     name: "Về Phía Mưa",
@@ -103,7 +102,7 @@ const idMusics = [
     name: "Cafe, Thuốc Lá & Những Ngày Vui",
   },
 ];
-const crawMyList = () =>{
+const crawMyList = () => {
   const getSourceSong = () => {
     return Promise.all(
       idMusics.map((e) => {
@@ -111,35 +110,35 @@ const crawMyList = () =>{
         return fetch(sourceSongApi)
           .then((response) => {
             return response.json();
-          }) 
+          })
           .then((data) => {
             return {
-              path: data.data['128']
-            }
+              path: data.data["128"],
+            };
           });
       })
     );
   };
-  const getInfoSong = () =>{
+  const getInfoSong = () => {
     return Promise.all(
       idMusics.map((e) => {
-        let detailSongApi = `${myApi}/api/v1/infosong?id=${e.id}`
+        let detailSongApi = `${myApi}/api/v1/infosong?id=${e.id}`;
         return fetch(detailSongApi)
           .then((response) => {
             return response.json();
-          }) 
+          })
           .then((data) => {
             return {
               name: data.data.title,
               singer: data.data.artistsNames,
-              image: data.data.thumbnailM
-            }
+              image: data.data.thumbnailM,
+            };
           });
       })
     );
-  }
+  };
 
-  return Promise.all([getInfoSong(),getSourceSong()])
-}
+  return Promise.all([getInfoSong(), getSourceSong()]);
+};
 
 export default crawMyList;
