@@ -12,7 +12,29 @@
 body {
   font-family: "Poppins", sans-serif;
 }
-
+/* CSS loading effect */
+.loading {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgb(255, 255, 255);
+  z-index: 1;
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.loading-gif {
+  position: absolute;
+  width: 200px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 /* container  */
 .player {
   max-width: 600px;
@@ -118,7 +140,7 @@ header h2 {
   display: flex;
   justify-content: space-between;
 }
-.time-seeking{
+.time-seeking {
   position: absolute;
   left: 0;
   top: 0;
@@ -249,13 +271,13 @@ header h2 {
 .song-top100 {
   padding-left: 50px;
 }
-.rank.top-1{
+.rank.top-1 {
   color: #336eec;
 }
-.rank.top-2{
+.rank.top-2 {
   color: greenyellow;
 }
-.rank.top-3{
+.rank.top-3 {
   color: orange;
 }
 /* Song Element when playing */
@@ -292,7 +314,7 @@ header h2 {
     width: 40px;
   }
 }
-@media screen and (max-width: 400px){
+@media screen and (max-width: 400px) {
   .song-content {
     width: 150px;
   }

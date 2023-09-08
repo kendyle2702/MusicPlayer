@@ -4,6 +4,7 @@ import crawMyList from "../data/crawlMyList/crawMyList.js";
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const loading = $(".loading");
 const playLists = $$(".playlist");
 const playListMyList = $(".playlist-mylist");
 const playListTop100 = $(".playlist-top100");
@@ -42,60 +43,6 @@ const app = {
       singer: "W/n ft 267",
       path: "https://a128-zmp3.zmdcdn.me/90083d6a4f1c62d2b7b5f3e76fed2986?authen=exp=1694008835~acl=/90083d6a4f1c62d2b7b5f3e76fed2986/*~hmac=9f92ae790616537d04eb5e9840089385&fs=MTY5MzgzNjAzNTA2NHx3ZWJWNHwxMjUdUngMjM1LjIzNy4xODU",
       image: "./img/3107id072019.jpg",
-    },
-    {
-      name: "Bức Tranh Từ Nước Mắt",
-      singer: "Mr Siro",
-      path: "https://a128-zmp3.zmdcdn.me/f3e6f9e86f695e3abf60c1347f7d32c8?authen=exp=1693840526~acl=/f3e6f9e86f695e3abf60c1347f7d32c8/*~hmac=23411ed541290f7d79991eacf7210b67",
-      image: "./img/BucTranhTuNuocMat.jpg",
-    },
-    {
-      name: "SAIGON SIMPLE LOVE",
-      singer: "Nguyên ft Seth",
-      path: "https://a128-zmp3.zmdcdn.me/ef58060cfb07d620934cb189e07aaa33?authen=exp=1693840619~acl=/ef58060cfb07d620934cb189e07aaa33/*~hmac=c8cc37d45789de6ad158c27eb1ddeb21",
-      image: "./img/SaiGonSimpleLove.jpg",
-    },
-    {
-      name: "Day Dứt Nỗi Đau",
-      singer: "Mr Siro",
-      path: "https://a128-zmp3.zmdcdn.me/2aa0351bf3b5dc23f2891c2352b8457d?authen=exp=1693840725~acl=/2aa0351bf3b5dc23f2891c2352b8457d/*~hmac=362612ae60d7ab0e97366561b6291f91",
-      image: "./img/DayDutNoiDau.jpg",
-    },
-    {
-      name: "Dưới Những Cơn Mưa",
-      singer: "Mr Siro",
-      path: "https://a128-zmp3.zmdcdn.me/9cedc121eba52e436f9f67391530deb4?authen=exp=1693840487~acl=/9cedc121eba52e436f9f67391530deb4/*~hmac=93685a303560d5473b26dad31be32d7f",
-      image: "./img/DuoiNhungConMua.jpg",
-    },
-    {
-      name: "Không Muốn Yêu Lại Càng Say Đắm",
-      singer: "Mr Siro",
-      path: "https://a128-zmp3.zmdcdn.me/731cfabce1f55425d8118d670e6ef3ac?authen=exp=1693840640~acl=/731cfabce1f55425d8118d670e6ef3ac/*~hmac=269279bd1c11524e000c709004a3d3c7",
-      image: "./img/KhongMuonYeuLaiCangSayDam.jpg",
-    },
-    {
-      name: "Có Em",
-      singer: "Madihu ft LowG",
-      path: "https://a128-zmp3.zmdcdn.me/3ec20f0e94c33be627db72fcdd9a1a83?authen=exp=1693840934~acl=/3ec20f0e94c33be627db72fcdd9a1a83/*~hmac=ac6a18eab51d09759f0d1d3e0854a3a7",
-      image: "./img/CoEm.jpg",
-    },
-    {
-      name: "Vì Anh Đâu Có Biết",
-      singer: "Madihu ft Vũ",
-      path: "https://f9-stream.nixcdn.com/Warner_Audio99/ViAnhDauCoBiet-MadihuVu-8095009.mp3?st=-LdFk3rQ87agg1SnIyxkpQ&e=1693719750",
-      image: "./img/ViAnhDauCoBiet.jpg",
-    },
-    {
-      name: "Bingo",
-      singer: "Nguyên ft MC Wiz & Boyzed",
-      path: "https://public.bn.files.1drv.com/y4mTWDKVa1vdtyPh5Rj7SSgYbMtrWoktU85zufqWh6QUrQDeETaVyvG7X3rGdM2h9GU18s2L4mckd3Tq99Cl3rdfBk1mSRgISC14yaf9HF_ecbT4quBvXOloBMrer1LdV4Wkn9HEN8clGbuB3DODGXb5u3uvmMMHLZqdFGeqEq3gmF9Hryw0NcUMgdSpqb4aD5n7XPIbaX2DW_DyAGipoxoZbnXa6mhahAkSJJY7m9CA1k?AVOverride=1",
-      image: "./img/Bingo.jpg",
-    },
-    {
-      name: "Không Yêu Xin Đừng Nói",
-      singer: "UMIE",
-      path: "https://a128-zmp3.zmdcdn.me/9c2ff9b7cb5fecf7f3ef9eb4da229243?authen=exp=1693840974~acl=/9c2ff9b7cb5fecf7f3ef9eb4da229243/*~hmac=759669d5cefe4a131827399a1ffbdd90",
-      image: "./img/KhongYeuXinDungNoi.jpg",
     },
   ],
   top100Songs: [],
@@ -500,26 +447,30 @@ const app = {
 
     // Load Top 100 Tab
     this.loadTop100Tab();
-    
   },
   loadMyListTab: function () {
     // Get myListSongs from module
-    crawMyList().then((list) => {
-      this.myListSongs = list[0].map((e,i)=>{
-          return {...e,...list[1][i]}
+    crawMyList()
+      .then((list) => {
+        this.myListSongs = list[0].map((e, i) => {
+          return { ...e, ...list[1][i] };
+        });
+
+        // Set current songs = My List Songs in My List Tab
+        this.currentSongs = this.myListSongs;
+
+        // Render songs in My List
+        this.renderMyListTab();
+
+        // Handle event in My List Tab
+        this.handleMyListTabEvent();
+        // Load current Song
+        this.loadCurrentSong();
       })
-
-      // Set current songs = My List Songs in My List Tab
-      this.currentSongs = this.myListSongs;
-
-      // Render songs in My List
-      this.renderMyListTab();
-
-      // Handle event in My List Tab
-      this.handleMyListTabEvent();
-      // Load current Song
-      this.loadCurrentSong();
-    });
+      .then(() => {
+        // Hiden loading
+        loading.classList.add("hidden");
+      });
   },
   loadTop100Tab: function () {
     // Get data from module
