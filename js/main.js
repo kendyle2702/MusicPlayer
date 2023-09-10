@@ -415,7 +415,8 @@ const app = {
   updateProgressColor: function () {
     // Calculate progress past width
     let progressPastWidth = (progress.value / 10000) * progress.clientWidth;
-
+    console.log(progressPastWidth)
+    timeSeekingElement.style.left = progressPastWidth - timeSeekingElement.offsetWidth/2 + 'px'
     // Update color linear gradient
     progress.style.background = `linear-gradient(to right, #2a55e0 0%, #9c6ff0 ${Math.floor(
       progressPastWidth

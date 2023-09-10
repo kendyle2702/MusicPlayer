@@ -1,4 +1,4 @@
-const myApi = "https://music-player-server-kendyle2702.vercel.app";
+const myApi = "https://music-player-server-lime.vercel.app";
 const idMusics = [
   {
     id: "ZWBIEWBI",
