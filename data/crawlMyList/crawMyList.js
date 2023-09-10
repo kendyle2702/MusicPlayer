@@ -102,6 +102,11 @@ const idMusics = [
     name: "Cafe, Thuốc Lá & Những Ngày Vui",
   },
 ];
+
+fetch(myApi).catch(()=>{
+  myApi = 'https://music-player-server-kendyle2702.vercel.app'
+})
+
 const crawMyList = () => {
   const getSourceSong = () => {
     return Promise.all(
@@ -115,7 +120,7 @@ const crawMyList = () => {
             return {
               path: data.data["128"],
             };
-          });
+          })
       })
     );
   };
