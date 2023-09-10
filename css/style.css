@@ -246,6 +246,7 @@ header h2 {
 /* Song content */
 .song-content {
   width: 200px;
+  overflow-wrap: break-word;
 }
 .song-name {
   font-size: 16px;
