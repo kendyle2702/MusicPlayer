@@ -1,4 +1,4 @@
-const myApi = "https://music-player-server-lime.vercel.app";
+const myApi = "https://music-player-server-kendyle2702.vercel.app";
 const idMusics = [
   {
     id: "ZWBIEWBI",
@@ -102,10 +102,6 @@ const idMusics = [
     name: "Cafe, Thuốc Lá & Những Ngày Vui",
   },
 ];
-
-fetch(myApi).catch(()=>{
-  myApi = 'https://music-player-server-kendyle2702.vercel.app'
-})
 
 const crawMyList = () => {
   const getSourceSong = () => {
