@@ -1,5 +1,24 @@
 const myApi = "https://music-player-server-lime.vercel.app";
-
+// {
+//     id: "Z6DIE700",
+//     name: "Tệ Thật, Anh Nhớ Em",
+//   },
+//  {
+//     id: "ZZADU0BU",
+//     name: "ÁNH CHIỀU TÀN",
+//   },
+//         {
+//     id: "ZZDUOIA6",
+//     name: "vaicaunoicokhiennguoithaydoi",
+//   },
+//         {
+//     id: "ZZ9I7EZ7",
+//     name: "Chuyện Đôi Ta",
+//   },
+//        {
+//     id: "Z6UFF9Z6",
+//     name: "để tôi ôm em bằng giai điệu này",
+//   },
 const idMusics = [
   {
     id: "ZWBIEWBI",
@@ -33,14 +52,8 @@ const idMusics = [
     id: "Z67CZDWA",
     name: "Không Yêu Xin Đừng Nói",
   },
-  {
-    id: "Z6DIE700",
-    name: "Tệ Thật, Anh Nhớ Em",
-  },
-  {
-    id: "ZZADU0BU",
-    name: "ÁNH CHIỀU TÀN",
-  },
+  
+ 
   {
     id: "Z6UBADAF",
     name: "Yêu Người Có Ước Mơ",
@@ -73,14 +86,8 @@ const idMusics = [
     id: "ZW8IC98I",
     name: "Ta Còn Yêu Nhau",
   },
-  {
-    id: "ZZDUOIA6",
-    name: "vaicaunoicokhiennguoithaydoi",
-  },
-  {
-    id: "ZZ9I7EZ7",
-    name: "Chuyện Đôi Ta",
-  },
+
+
   {
     id: "ZZEF769O",
     name: "Ngày Mai Em Đi Mất",
@@ -89,10 +96,7 @@ const idMusics = [
     id: "ZZDB9868",
     name: "Chạy Khỏi Thế Giới Này",
   },
-  {
-    id: "Z6UFF9Z6",
-    name: "để tôi ôm em bằng giai điệu này",
-  },
+ 
 
   {
     id: "ZW8WOA0A",
